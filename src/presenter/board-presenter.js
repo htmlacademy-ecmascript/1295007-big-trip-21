@@ -1,24 +1,30 @@
-import ListSortView from '../view/list-sort-view.js';
-import PointsListView from '../view/points-list-view.js';
+import PointSortView from '../view/point-sort-view.js';
+import PointListView from '../view/point-list-view.js';
 import PointEditView from '../view/point-edit-view.js';
 import PointView from '../view/point-view.js';
 import { render } from '../render.js';
 
 export default class BoardPresenter {
-  pointsListComponent = new PointsListView();
+  pointSortComponent = new PointSortView();
+  pointListComponent = new PointListView();
+  pointEditComponent = new PointEditView();
 
-  constructor({container}) {
+  constructor({container, pointsCount}) {
     this.container = container;
+    this.pointsCount = pointsCount;
+  }
+
+  getPointViewList() {
+    for (let i = 0; i < this.pointsCount; i++) {
+      render(new PointView(), this.pointListComponent.getElement());
+    }
   }
 
   init() {
-    render(new ListSortView(), this.container);
-    render(this.pointsListComponent, this.container);
+    render(this.pointSortComponent, this.container);
+    render(this.pointListComponent, this.container);
+    render(this.pointEditComponent, this.pointListComponent.getElement());
 
-    render(new PointEditView(), this.pointsListComponent.getElement());
-
-    for (let i = 0; i < 3; i++) {
-      render(new PointView(), this.pointsListComponent.getElement());
-    }
+    this.getPointViewList();
   }
 }
